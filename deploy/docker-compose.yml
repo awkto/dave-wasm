@@ -1,0 +1,26 @@
+# dave-wasm — per-host deployment (box.dnsif.ca / pro.dnsif.ca).
+#
+# Each host runs this same compose file. Put the FULL retail game files under
+# /srv/dave-data (one subdir per game) — the container detects them at startup,
+# serves all three games, and hides the bring-your-own upload UI.
+#
+#   /srv/dave-data/dave1/DAVE.EXE EGADAVE.DAV ...
+#   /srv/dave-data/dave2/1.EXE *.DD2 ...
+#   /srv/dave-data/dave3/DAVE.EXE EGAGRAPH.DAV GAMEMAPS.DAV AUDIO.DAV ...
+#
+# The container listens on 127.0.0.1:5024; the host's nginx reverse proxy
+# (deploy/nginx-dave.conf) terminates TLS and proxies to it.
+services:
+  dave-wasm:
+    # Use the published image once CI has pushed it…
+    image: awkto/dave-wasm:latest
+    # …or build locally instead (comment out `image:` above, uncomment below):
+    # build:
+    #   context: ..
+    #   dockerfile: Dockerfile
+    container_name: dave-wasm
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5024:80"
+    volumes:
+      - /srv/dave-data:/data:ro

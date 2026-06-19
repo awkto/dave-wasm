@@ -1,0 +1,23 @@
+# Never commit commercial Dave 2/3 data. Only the free dave1.jsdos is allowed.
+games/*.jsdos
+!games/dave1.jsdos
+games/manifest.json
+
+# Commercial / user-supplied game data (Haunted Mansion / Risky Rescue)
+*.DD2
+*.dd2
+*.DAV
+*.dav
+!games/dave1.jsdos
+1.EXE
+dave2*
+dave3*
+
+# Local data staging for the box/pro server deployments (full game files)
+/data/
+/deploy/data/
+
+# Cruft
+.DS_Store
+node_modules/
+*.log

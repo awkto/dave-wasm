@@ -214,6 +214,7 @@ async function launch(url, key) {
   if (touch) {
     $("game-stage").classList.add("touch");
     $("touch-controls").hidden = false;
+    renderTouchActions(key);   // jump/fire/jet buttons for this specific game
     // Size the game pane to the chosen display aspect so the canvas fills it
     // with no black letterbox below (the freed height goes to the controls).
     const AR = { "4/3": "4 / 3", "5/4": "5 / 4", "16/10": "16 / 10", "16/9": "16 / 9",
@@ -396,6 +397,40 @@ function bindTouchButton(btn) {
   // iOS callout) that otherwise fire pointercancel mid-hold and drop the keys.
   btn.addEventListener("contextmenu", (e) => e.preventDefault());
   btn.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
+}
+
+// Per-game on-screen action buttons (label + GLFW key code + colour class).
+// Movement is the joystick (arrow keys); these are the game's jump/fire/etc.
+// The keys differ per title (verified against each game's manual):
+//   Dave 1 (1990):           Up=Jump, Alt=Fire, Ctrl=Jetpack
+//   Dave 2 (Haunted Mansion): Ctrl=Jump, Alt=Fire
+//   Dave 3 (Risky Rescue):    Ctrl=Jump, Alt=Fire
+// GLFW codes: Up=265, Left-Ctrl=341, Left-Alt=342.
+const TOUCH_ACTIONS = {
+  dave1: [{ label: "FIRE", keys: "342", cls: "fire" },
+          { label: "JET",  keys: "341", cls: "jet"  },
+          { label: "JUMP", keys: "265", cls: "jump" }],
+  dave2: [{ label: "FIRE", keys: "342", cls: "fire" },
+          { label: "JUMP", keys: "341", cls: "jump" }],
+  dave3: [{ label: "FIRE", keys: "342", cls: "fire" },
+          { label: "JUMP", keys: "341", cls: "jump" }],
+};
+
+// Build the action buttons for the game being launched and bind them. (Movement,
+// menu, Y/N and save/load buttons are static; only these differ per game.)
+function renderTouchActions(key) {
+  const wrap = document.querySelector("#touch-controls .actions");
+  if (!wrap) return;
+  const cfg = TOUCH_ACTIONS[key] || TOUCH_ACTIONS.dave2;
+  wrap.innerHTML = "";
+  cfg.forEach((b) => {
+    const el = document.createElement("button");
+    el.className = "abtn " + b.cls;
+    el.dataset.keys = b.keys;
+    el.textContent = b.label;
+    wrap.appendChild(el);
+    bindTouchButton(el);
+  });
 }
 
 // Virtual joystick -> arrow keys (8-way). Removes the dead center of a d-pad.

@@ -432,12 +432,13 @@ html, body {
 .statebtn.load { background: var(--good); color: #06200f; }  /* load state */
 .statebtn.active { filter: brightness(0.72); }
 
+/* Action buttons are built per-game (2 for Dave 2/3, 3 for Dave 1), so lay them
+   out in a flexible row that centres whatever count is present. */
 .actions {
   flex: 0 0 auto;
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: 3vw;              /* spread the action buttons apart (but keep them on-screen) */
+  display: flex;
   align-items: center;
+  gap: 3vw;              /* spread the action buttons apart (but keep them on-screen) */
 }
 .abtn {
   width: min(18vw, 22vh);
@@ -449,9 +450,9 @@ html, body {
   color: #1a1033;
   touch-action: none;
 }
-.abtn.fire { background: #ff6b6b;        grid-column: 1; grid-row: 1; }   /* top-left */
-.abtn.jet  { background: var(--accent2); grid-column: 2; grid-row: 1; }   /* top-right */
-.abtn.jump { background: #6ee06e; grid-column: 1 / -1; grid-row: 2; justify-self: center; } /* bottom */
+.abtn.fire { background: #ff6b6b; }        /* fire */
+.abtn.jet  { background: var(--accent2); } /* jetpack (Dave 1) */
+.abtn.jump { background: #6ee06e; }        /* jump */
 .abtn.active { filter: brightness(0.7); transform: scale(0.95); }
 
 /* In touch mode, hide the js-dos sidebar (save/keyboard/fullscreen/settings)

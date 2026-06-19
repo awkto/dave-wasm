@@ -133,12 +133,9 @@
         <button class="mbtn" data-keys="256" aria-label="Escape">ESC</button>
       </div>
 
-      <!-- Dangerous Dave: JUMP=Up arrow, FIRE=Ctrl (gun), JET=Alt (jetpack, Dave 1). -->
-      <div class="actions">
-        <button class="abtn fire" data-keys="341">FIRE</button>
-        <button class="abtn jet"  data-keys="342">JET</button>
-        <button class="abtn jump" data-keys="265">JUMP</button>
-      </div>
+      <!-- Action buttons are built per-game in launch() — keys differ per title:
+           Dave 1 → Up=Jump, Alt=Fire, Ctrl=Jet;  Dave 2 & 3 → Ctrl=Jump, Alt=Fire. -->
+      <div class="actions"></div>
     </div>
 
     <!-- Touch keyboard: focusing the hidden input pops the device's soft keyboard

@@ -75,9 +75,16 @@ curl -sk https://box.dnsif.ca/games/manifest.json
 
 Open the site: it should show three one-click **Play** buttons and **no** upload card.
 
-## Updating
+## Updating (automatic via Watchtower)
+
+The compose file includes a **Watchtower** service that polls Docker Hub every 5 minutes and, when
+a new `awkto/dave-wasm:latest` is pushed (by the release workflow), pulls it, recreates the
+container, and prunes the old image. It's scoped by the `com.centurylinklabs.watchtower.enable`
+label, so it only touches dave-wasm. Tag a new release → both hosts update themselves within ~5
+minutes. (Bundles rebuild from `/data` on every container start, so no extra step.)
+
+Manual update, if ever needed:
 
 ```bash
-docker compose pull && docker compose up -d     # new image
-# bundles rebuild from /data at every container start; no extra step needed
+docker compose pull && docker compose up -d
 ```

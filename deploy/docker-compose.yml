@@ -24,3 +24,20 @@ services:
       - "127.0.0.1:5024:80"
     volumes:
       - /srv/dave-data:/data:ro
+    labels:
+      # Watchtower only auto-updates containers carrying this label (below).
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # Keeps dave-wasm on the latest pushed image. Polls Docker Hub every 5 min;
+  # on a new awkto/dave-wasm:latest it pulls, recreates the container, and prunes
+  # the old image. Scoped by label so it ignores other containers on the host.
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: dave-wasm-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_POLL_INTERVAL=300

@@ -1,5 +1,23 @@
 # Deploying dave-wasm to box.dnsif.ca & pro.dnsif.ca
 
+> **Live instances** (deployed): **https://dave.pro.dnsif.ca** and **https://dave.box.dnsif.ca**.
+> Each runs `awkto/dave-wasm:latest` as a `docker run` container on `127.0.0.1:5027`, with full
+> game data at `~/dave-data/{dave1,dave2,dave3}`, fronted by the host's nginx using its
+> `*.<host>.dnsif.ca` wildcard cert. Auto-updates ride the host's existing Watchtower (pro watches
+> all containers; box's `keen-watchtower` lists `dave-wasm` alongside the keen/zeliard games). The
+> exact commands used:
+>
+> ```bash
+> rsync -a deploy/data/  dave.<host-ssh>:dave-data/
+> docker run -d --name dave-wasm --restart unless-stopped \
+>   -p 127.0.0.1:5027:80 -v /home/altanc/dave-data:/data:ro awkto/dave-wasm:latest
+> # nginx vhost dave.<host>.dnsif.ca -> 127.0.0.1:5027 (cert /etc/nginx/ssl/<host>.dnsif.ca.*)
+> ```
+>
+> The generic compose-based recipe below is for a clean host from scratch.
+
+
+
 Each host runs its own container + nginx reverse proxy. The full retail Dave 2/3 files live in a
 mounted `/data`, so all three games run with no uploads and the bring-your-own UI is hidden.
 

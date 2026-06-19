@@ -57,6 +57,12 @@ build_game() {
   done
 
   cat > "$work/.jsdos/dosbox.conf" <<CONF
+[sdl]
+autolock=false
+fullscreen=false
+output=surface
+mapperfile=mapper-jsdos.map
+usescancodes=true
 [dosbox]
 machine=svga_s3
 memsize=16
